@@ -85,7 +85,10 @@ with open('/data/steeve/mask_rcnn/data/split/valid_ids', 'r') as f:
     VAL_IMAGE_IDS = [id.strip() for id in f.readlines()]
 
 with open('/data/steeve/mask_rcnn/data/split/train_ids', 'r') as f:
-    TRAIN_IMAGE_IDS = [id.strip() for id in f.readlines()]    
+    TRAIN_IMAGE_IDS = [id.strip() for id in f.readlines()]   
+    
+with open('/data/steeve/mask_rcnn/test_data/split/test_ids', 'r') as f:
+    TEST_IMAGE_IDS = [id.strip() for id in f.readlines()]        
 
 ############################################################
 #  Configurations
@@ -192,11 +195,13 @@ class SubtitleDataset(utils.Dataset):
         # "val": use hard-coded list above
         # "train": use data from stage1_train minus the hard-coded list above
         # else: use the data from the specified sub-directory
-        assert subset in ["train", "val", "stage1_train", "stage1_test", "stage2_test"]
+        assert subset in ["train", "val", "test"]
         subset_dir = "stage1_train" if subset in ["train", "val"] else subset
 #         dataset_dir = os.path.join(dataset_dir, subset_dir)
         if subset == "val":
             image_ids = VAL_IMAGE_IDS
+        elif subset == "test":
+            image_ids = TEST_IMAGE_IDS
         else:
             # Get image ids from directory names
             image_ids = [ fn.split('.png')[0] for fn in os.listdir(dataset_dir+'/images/')]
